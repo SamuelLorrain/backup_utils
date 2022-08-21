@@ -5,7 +5,7 @@ import logging
 from config import RSYNC_LIST
 
 RSYNC_COMMAND="rsync"
-GLOBAL_RSYNC_OPTION=('-a', '-p')
+GLOBAL_RSYNC_OPTION=('-a', '-p', '-r', '-v')
 
 logging.basicConfig(
     filename='log.log',
@@ -37,10 +37,13 @@ class Rsync:
             *self.rsync_options,
             str(self.path_src),
             str(self.path_dst)
-        ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ], stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
         return_code = process.wait()
-        logging.debug(stdout) if stdout else None
+        if stdout:
+            for i in stdout.split(b'\n'):
+                print(i.decode('utf8'))
+        # logging.debug(stdout) if stdout else None
         logging.error(stderr) if stderr else None
 
         if return_code != 0:
