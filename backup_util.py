@@ -4,8 +4,8 @@ import subprocess
 import logging
 from config import RSYNC_LIST
 
-RSYNC_COMMAND="rsync"
-GLOBAL_RSYNC_OPTION=('-a', '-p', '-r', '-v')
+RSYNC_COMMAND = "rsync"
+GLOBAL_RSYNC_OPTION = ('-a', '-p', '-r', '-v')
 
 logging.basicConfig(
     filename='log.log',
@@ -13,6 +13,7 @@ logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s %(levelname)s: %(message)s'
 )
+
 
 class Rsync:
     src: str
@@ -27,7 +28,9 @@ class Rsync:
         self.dst = kwargs['dst']
         self.path_dst = Path(self.dst)
         # if not self.path_dst.():
-        #     print(f"Error, destination {self.dst} is not a valid folder/file")
+        #     print(
+        #       f"Error, destination {self.dst} is not a valid folder/file"
+        #     )
         self.rsync_options = kwargs.get('rsync_options', GLOBAL_RSYNC_OPTION)
         # TODO check for existing rsync_options ?
 
@@ -47,16 +50,18 @@ class Rsync:
         logging.error(stderr) if stderr else None
 
         if return_code != 0:
-            logging.error("ERROR, rsync for " \
+            logging.error("ERROR, rsync for "
                   f"'{RSYNC_COMMAND} {self.rsync_options} {self.src} {self.dst}' "
                   "failed!")
         if return_code == 0:
-            logging.debug("rsync for " \
+            logging.debug("rsync for "
                   f"'{RSYNC_COMMAND} {self.rsync_options} {self.src} {self.dst}' "
                   "success!")
 
+
 def create_rsync_list(dict_list):
     return [Rsync(**entry) for entry in dict_list]
+
 
 if __name__ == '__main__':
     rsync_list = create_rsync_list(RSYNC_LIST)
